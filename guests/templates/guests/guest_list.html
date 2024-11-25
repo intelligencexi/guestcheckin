@@ -1,0 +1,33 @@
+{% extends "guests/base.html" %}
+{%  load static %}
+{% block title %}Guest Management{% endblock %}
+{% block content %}
+
+
+<div class="container">
+    <h1>Guest List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Companions</th>
+                <th>Arrived</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for guest in guests %}
+            <tr>
+                <td>{{ guest.first_name }}</td>
+                <td>{{ guest.last_name }}</td>
+                <td>{{ guest.email }}</td>
+                <td>{{ guest.number_of_companions }}</td>
+                <td>{{ guest.has_arrived }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

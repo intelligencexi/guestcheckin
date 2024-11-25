@@ -1,0 +1,25 @@
+
+
+{% extends "guests/base.html" %}
+{%  load static %}
+{% block title %}Guest Management{% endblock %}
+{% block content %}
+
+
+<form id="add-guest-form" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Guest</button>
+</form>
+
+<!-- CSV Upload -->
+<h3>Upload Guests via CSV</h3>
+<form id="upload-csv-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="csv_file" accept=".csv" required>
+    <button type="submit">Upload CSV</button>
+</form>
+
+<!-- Feedback for Upload -->
+<div id="upload-feedback"></div>
+{% endblock %}
