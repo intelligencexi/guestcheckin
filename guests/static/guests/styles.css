@@ -21,3 +21,73 @@ form input {
     display: block;
     margin-bottom: 10px;
 }
+.alert {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+.pagination a {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    text-decoration: none;
+    color: #007bff;
+}
+.pagination a:hover {
+    background-color: #f1f1f1;
+}
+.pagination .current {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    background-color: #007bff;
+    color: white;
+}
+
+    .per-page-selector {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table th, table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    table th {
+        background-color: #f4f4f4;
+    }
+    .pagination {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+    }
+    .pagination a, .pagination span {
+        padding: 5px 10px;
+        border: 1px solid #ddd;
+        text-decoration: none;
+    }
+    .pagination a:hover {
+        background-color: #f1f1f1;
+    }
+    .pagination .current {
+        background-color: #007bff;
+        color: white;
+    }

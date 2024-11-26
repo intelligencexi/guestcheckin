@@ -1,33 +1,80 @@
 {% extends "guests/base.html" %}
-{%  load static %}
+{% load static %}
 {% block title %}Guest Management{% endblock %}
 {% block content %}
 
-
 <div class="container">
     <h1>Guest List</h1>
-    <table>
+
+    <!-- Display success message if it exists -->
+    {% if success_message %}
+    <div class="alert alert-success">
+        {{ success_message }}
+    </div>
+    {% endif %}
+
+    <!-- Guests Per Page Selector -->
+    <div class="per-page-selector">
+        <form method="get" action="">
+            <label for="per-page">Show:</label>
+            <select id="per-page" name="per_page" onchange="this.form.submit()">
+                <option value="20" {% if per_page|default:20 == 20 %}selected{% endif %}>20</option>
+                <option value="50" {% if per_page == 50 %}selected{% endif %}>50</option>
+                <option value="100" {% if per_page == 100 %}selected{% endif %}>100</option>
+            </select> entries per page.
+        </form>
+    </div>
+
+    <table class="table">
         <thead>
             <tr>
+                <th>GuestID</th>
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Email</th>
                 <th>Companions</th>
-                <th>Arrived</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
-            {% for guest in guests %}
+            {% for guest in page_obj %}
             <tr>
-                <td>{{ guest.first_name }}</td>
-                <td>{{ guest.last_name }}</td>
-                <td>{{ guest.email }}</td>
-                <td>{{ guest.number_of_companions }}</td>
-                <td>{{ guest.has_arrived }}</td>
+                <td>{{ guest.id }}</td> <!-- Guest ID -->
+                <td>{{ guest.first_name }}</td> <!-- First Name -->
+                <td>{{ guest.last_name }}</td> <!-- Last Name -->
+                <td>{{ guest.email }}</td> <!-- Email -->
+                <td>{{ guest.number_of_companions }}</td> <!-- Companions -->
+                <td>{{ guest.has_arrived|yesno:"Arrived,Not Arrived" }}</td> <!-- Status -->
+                <td>
+                    <a href="{% url 'guest-edit' guest.id %}" class="btn btn-warning btn-sm">Edit</a> <!-- Edit button -->
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No guests found.</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Pagination controls -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+            <a href="?page=1&per_page={{ per_page|default:20 }}">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}&per_page={{ per_page|default:20 }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&per_page={{ per_page|default:20 }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}&per_page={{ per_page|default:20 }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
 </div>
 
 {% endblock %}

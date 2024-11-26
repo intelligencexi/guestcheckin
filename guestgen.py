@@ -1,7 +1,6 @@
 import csv
 import random
 
-
 def generate_guest_list(num_guests, output_file):
     first_names = [
         "Intelligence",
@@ -39,15 +38,13 @@ def generate_guest_list(num_guests, output_file):
 
     with open(output_file, mode="w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
-        writer.writerow(["GuestID", "FirstName", "LastName", "Email", "Phone"])
+        writer.writerow(["FirstName", "LastName", "Email"])
 
         for guest_id in range(1, num_guests + 1):
             first_name = random.choice(first_names)
             last_name = random.choice(last_names)
             email = f"{first_name.lower()}.{last_name.lower()}{guest_id}@example.com"
-            phone = f"+1-{random.randint(100, 999)}-{random.randint(1000, 9999)}"
 
-            writer.writerow([guest_id, first_name, last_name, email, phone])
+            writer.writerow([first_name, last_name, email])
 
-
-generate_guest_list(600, "guestlist.csv")
+generate_guest_list(15000, "guestlist.csv")

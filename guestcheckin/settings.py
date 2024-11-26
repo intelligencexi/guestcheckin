@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "guests",
+    "crispy_forms",
 ]
 
 MIDDLEWARE = [
@@ -51,6 +53,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "guestcheckin.urls"
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 TEMPLATES = [
     {
@@ -122,3 +126,49 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+LOGS_DIR = os.path.join(BASE_DIR, 'logs')
+if not os.path.exists(LOGS_DIR):
+    os.makedirs(LOGS_DIR)
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/upload_csv.log'),
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'guests.upload_csv': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+    'formatters': {
+        'simple': {
+            'format': '%(levelname)s | %(asctime)s | %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+        'verbose': {
+            'format': '%(levelname)s | %(asctime)s | %(module)s | %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+    },
+}

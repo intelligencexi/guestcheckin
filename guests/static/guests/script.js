@@ -51,3 +51,51 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+document.getElementById('csv-upload-form').addEventListener('submit', function(event) {
+    event.preventDefault();  // Prevent form from submitting normally
+
+    const formData = new FormData(this);  // Get form data, including the file
+
+    fetch("{% url 'upload_csv' %}", {
+        method: "POST",
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Check if the upload was successful
+        if (data.success) {
+            // Display success message
+            document.getElementById('upload-message').innerHTML = data.message;
+
+            // Update counts
+            document.getElementById('success-count').textContent = data.total_success;
+            document.getElementById('duplicate-count').textContent = data.total_duplicates;
+
+            // Display successful entries
+            const successfulEntriesList = document.getElementById('successful-entries');
+            successfulEntriesList.innerHTML = '';  // Clear previous list
+            data.successful_entries.forEach(entry => {
+                const li = document.createElement('li');
+                li.textContent = entry;
+                successfulEntriesList.appendChild(li);
+            });
+
+            // Display duplicate entries
+            const duplicateEntriesList = document.getElementById('duplicate-entries');
+            duplicateEntriesList.innerHTML = '';  // Clear previous list
+            data.duplicate_entries.forEach(entry => {
+                const li = document.createElement('li');
+                li.textContent = entry;
+                duplicateEntriesList.appendChild(li);
+            });
+
+            // Optionally, you could clear the form
+            document.getElementById('csv-upload-form').reset();
+        } else {
+            document.getElementById('upload-message').innerHTML = 'Upload failed: ' + data.message;
+        }
+    })
+    .catch(error => {
+        document.getElementById('upload-message').innerHTML = 'An error occurred: ' + error.message;
+    });
+});
