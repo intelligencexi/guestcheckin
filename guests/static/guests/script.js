@@ -99,3 +99,28 @@ document.getElementById('csv-upload-form').addEventListener('submit', function(e
         document.getElementById('upload-message').innerHTML = 'An error occurred: ' + error.message;
     });
 });
+
+
+document.getElementById("upload-csv-form").addEventListener("submit", function (e) {
+    e.preventDefault(); // Prevent default form submission
+
+    const formData = new FormData(this);
+
+    fetch("{% url 'upload_csv' %}", {
+        method: "POST",
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Redirect to the guest list after success
+            window.location.href = "{% url 'guest-list' %}";
+        } else {
+            alert(data.message || "An error occurred during the upload.");
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An unexpected error occurred.");
+    });
+});

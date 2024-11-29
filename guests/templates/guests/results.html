@@ -1,0 +1,18 @@
+{% for result in results %}
+<tr>
+    <td>{{ result.id }}</td> 
+    <td>{{ result.first_name }}</td> 
+    <td>{{ result.last_name }}</td> 
+    <td>{{ result.number_of_companions }}</td> 
+    <td>{{ result.court }}</td>
+    <td>{{ result.row }}</td> 
+    <td>{{ result.has_arrived|yesno:"Arrived,Not Arrived" }}</td>
+    <td>
+        <a href="{% url 'guest-edit' result.id %}" class="btn btn-warning btn-sm">Edit</a>
+    </td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="7">No guests found.</td>
+</tr>
+{% endfor %}

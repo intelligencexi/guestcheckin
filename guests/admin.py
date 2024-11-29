@@ -3,4 +3,4 @@ from .models import Guest
 
 @admin.register(Guest)
 class GuestAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'email', 'number_of_companions')
+    list_display = ('first_name', 'last_name', 'number_of_companions', 'court', 'row')

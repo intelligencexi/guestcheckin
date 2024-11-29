@@ -8,11 +8,13 @@
         <button onclick="window.location.href='{% url 'list_guests' %}'">View Guests</button>
 
         <div id="add-form" class="hidden">
-            <form id="add-guest-form" method="POST">
+            <form id="add-guest-form" method="POST" action="{% url 'add_guest' %}">
+                {% csrf_token %}
                 <input type="text" name="first_name" placeholder="First Name" required>
                 <input type="text" name="last_name" placeholder="Last Name" required>
-                <input type="email" name="email" placeholder="Email" required>
                 <input type="number" name="number_of_companions" placeholder="Number of Companions">
+                <input type="text" name="court" placeholder="Court" required>
+                <input type="number" name="row" placeholder="Row" required>
                 <button type="submit">Add Guest</button>
             </form>
         </div>
@@ -26,6 +28,7 @@
         </div>
     </div>
 
+    
     
 
 {% endblock %}

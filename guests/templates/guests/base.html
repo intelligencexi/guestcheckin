@@ -5,28 +5,31 @@
     <meta charset="UTF-8">
     <title>{% block title %}Guest Management{% endblock %}</title>
     <link rel="stylesheet" href="{% static "guests/styles.css" %}">
+    <script src="{% static "guests/script.js" %}"></script>
+    <script src="{% static 'guests/htmx.min.js' %}"></script>
 </head>
 <body>
 
     <header>
         <h1>Guest Management System</h1>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <!-- Search form -->
-            <form method="GET" action="{% url 'list_guests' %}">
-                <input type="text" name="search" placeholder="Search guests..." required>
-                <button type="submit">Search</button>
-            </form>
-
-            <!-- Add record button -->
-            <button onclick="toggleAddRecordModal()">Add Record</button>
-        </div>
     </header>
+
+    <section class="section">
+        <div class="columns">
+            <div class="column is-one-third is-offset-one-third">
+                {% block search %}
+                <input type="text" class="input" placeholder="Search by names or KC" name="q" 
+                       hx-get="/search/" 
+                       hx-trigger="keyup changed delay:500ms" 
+                       hx-target="#results">
+                {% endblock %}
+            </div>
+        </div>
+    </section>
+    
 
     <main>
         {% block content %}{% endblock %}
     </main>
-
-
-    <script src="{% static "guests/script.js" %}"></script>
 </body>
 </html>

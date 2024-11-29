@@ -3,15 +3,52 @@
 {% block title %}Guest Management{% endblock %}
 {% block content %}
 
+
+<div class="container">
+    <button id="show-add-form">Add Guest</button>
+    <button id="show-upload-form">Upload CSV</button>
+    <button onclick="window.location.href='{% url 'list_guests' %}'">View Guests</button>
+
+    <div id="add-form" class="hidden">
+        <form id="add-guest-form" method="POST" action="{% url 'add_guest' %}">
+            {% csrf_token %}
+            <input type="text" name="first_name" placeholder="First Name" required>
+            <input type="text" name="last_name" placeholder="Last Name" required>
+            <input type="number" name="number_of_companions" placeholder="Number of Companions">
+            <input type="text" name="court" placeholder="Court" required>
+            <input type="number" name="row" placeholder="Row" required>
+            <button type="submit">Add Guest</button>
+        </form>
+    </div>
+
+    <div id="upload-form" class="hidden">
+        <form id="upload-csv-form" method="POST" action="{% url 'upload_csv' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="csv_file" accept=".csv" required>
+            <button type="submit">Upload CSV</button>
+        </form>
+    </div>
+</div>
+
 <div class="container">
     <h1>Guest List</h1>
 
     <!-- Display success message if it exists -->
-    {% if success_message %}
+    {% comment %} {% if success_message %}
     <div class="alert alert-success">
         {{ success_message }}
     </div>
-    {% endif %}
+    {% endif %} {% endcomment %}
+
+    {% if messages %}
+<div class="messages">
+    {% for message in messages %}
+    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
 
     <!-- Guests Per Page Selector -->
     <div class="per-page-selector">
@@ -28,33 +65,38 @@
     <table class="table">
         <thead>
             <tr>
-                <th>GuestID</th>
+                <th>s/n</th>
                 <th>First Name</th>
                 <th>Last Name</th>
-                <th>Email</th>
                 <th>Companions</th>
+                <th>Court</th>
+                <th>Row</th>
                 <th>Status</th>
             </tr>
         </thead>
-        <tbody>
+
+        <tbody id="results">
             {% for guest in page_obj %}
-            <tr>
-                <td>{{ guest.id }}</td> <!-- Guest ID -->
-                <td>{{ guest.first_name }}</td> <!-- First Name -->
-                <td>{{ guest.last_name }}</td> <!-- Last Name -->
-                <td>{{ guest.email }}</td> <!-- Email -->
-                <td>{{ guest.number_of_companions }}</td> <!-- Companions -->
-                <td>{{ guest.has_arrived|yesno:"Arrived,Not Arrived" }}</td> <!-- Status -->
+            <tr class="{% if guest.id == highlighted_guest %}highlight{% endif %}">
+                <td>{{ guest.id }}</td> 
+                <td>{{ guest.first_name }}</td> 
+                <td>{{ guest.last_name }}</td> 
+                <td>{{ guest.number_of_companions }}</td> 
+                <td>{{ guest.court }}</td>
+                <td>{{ guest.row }}</td> 
+                <td>{{ guest.has_arrived|yesno:"Arrived,Not Arrived" }}</td>
                 <td>
-                    <a href="{% url 'guest-edit' guest.id %}" class="btn btn-warning btn-sm">Edit</a> <!-- Edit button -->
+                    <a href="{% url 'guest-edit' guest.id %}" class="btn btn-warning btn-sm">Edit</a>
                 </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="6">No guests found.</td>
+                <td colspan="7">No guests found.</td>
             </tr>
             {% endfor %}
         </tbody>
+        
+
     </table>
 
     <!-- Pagination controls -->
