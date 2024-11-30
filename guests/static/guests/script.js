@@ -124,3 +124,37 @@ document.getElementById("upload-csv-form").addEventListener("submit", function (
         alert("An unexpected error occurred.");
     });
 });
+
+// Wait until the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Show CSV upload form when the "Upload CSV" button is clicked
+    const showUploadFormButton = document.getElementById('show-upload-form');
+    const uploadForm = document.getElementById('upload-form');  // Assuming you have a form with this id
+
+    if (showUploadFormButton) {
+        showUploadFormButton.addEventListener('click', function () {
+            uploadForm.classList.toggle('is-hidden');
+        });
+    }
+
+    // Show Add Guest form when the "Add Guest" button is clicked
+    const showAddFormButton = document.getElementById('show-add-form');
+    const addGuestForm = document.getElementById('add-guest-form');  // Assuming you have a form with this id
+
+    if (showAddFormButton) {
+        showAddFormButton.addEventListener('click', function () {
+            addGuestForm.classList.toggle('is-hidden');
+        });
+    }
+
+    // Optional: Handle form submission via HTMX (If you need to submit forms dynamically via HTMX)
+    const addGuestFormSubmit = document.getElementById('add-guest-form-submit');
+    if (addGuestFormSubmit) {
+        addGuestFormSubmit.addEventListener('click', function (e) {
+            e.preventDefault();
+            const formData = new FormData(document.getElementById('add-guest-form'));
+            htmx.ajax('POST', '/guests/add/', {target: '#guest-list', swap: 'innerHTML', values: formData});
+        });
+    }
+});

@@ -1,35 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
     {% load static %}
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Guest Management{% endblock %}</title>
-    <link rel="stylesheet" href="{% static "guests/styles.css" %}">
-    <script src="{% static "guests/script.js" %}"></script>
-    <script src="{% static 'guests/htmx.min.js' %}"></script>
-</head>
-<body>
 
-    <header>
-        <h1>Guest Management System</h1>
-    </header>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Guest Management{% endblock %}</title>
+        <link rel="stylesheet" href="{% static 'guests/styles.css' %}">
+        <script src="{% static 'guests/script.js' %}"></script>
+        <script src="{% static 'guests/htmx.min.js' %}"></script>
+    </head>
+    
+    <body>
+        <header class="navbar is-dark">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="/"><h1 class="title is-3">Guest Management System</h1></a>
+            </div>
+        </header>
+    
+        <section class="section">
+            <div class="container">
+                <div class="columns is-centered">
+                    <div class="column is-half">
+                        {% block search %}
+                            <input type="text" class="input" placeholder="Search by names or KC" name="q"
+                                hx-get="/search/" hx-trigger="keyup changed delay:500ms" hx-target="#guest-list">
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <section class="section">
-        <div class="columns">
-            <div class="column is-one-third is-offset-one-third">
-                {% block search %}
-                <input type="text" class="input" placeholder="Search by names or KC" name="q" 
-                       hx-get="/search/" 
-                       hx-trigger="keyup changed delay:500ms" 
-                       hx-target="#results">
+        <div class="container">
+            <h1 class="title is-3">Manage Guests</h1>
+            <div>
+                <button id="show-upload-form" class="button is-primary">Upload CSV</button>
+                <button id="show-add-form" class="button is-link">Add Guest</button>
+            </div>
+
+            <!-- Guest List will be rendered dynamically here -->
+            <div id="guest-list">
+                {% block guest_list %}
+                    <!-- This is where the guest list will be loaded. By default, it's empty until it's populated -->
                 {% endblock %}
             </div>
         </div>
-    </section>
-    
 
-    <main>
-        {% block content %}{% endblock %}
-    </main>
-</body>
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+        <script >
+
+            // Wait until the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Show CSV upload form when the "Upload CSV" button is clicked
+    const showUploadFormButton = document.getElementById('show-upload-form');
+    const uploadForm = document.getElementById('upload-form');  // Assuming you have a form with this id
+
+    if (showUploadFormButton) {
+        showUploadFormButton.addEventListener('click', function () {
+            uploadForm.classList.toggle('is-hidden');
+        });
+    }
+
+    // Show Add Guest form when the "Add Guest" button is clicked
+    const showAddFormButton = document.getElementById('show-add-form');
+    const addGuestForm = document.getElementById('add-guest-form');  // Assuming you have a form with this id
+
+    if (showAddFormButton) {
+        showAddFormButton.addEventListener('click', function () {
+            addGuestForm.classList.toggle('is-hidden');
+        });
+    }
+
+    // Optional: Handle form submission via HTMX (If you need to submit forms dynamically via HTMX)
+    const addGuestFormSubmit = document.getElementById('add-guest-form-submit');
+    if (addGuestFormSubmit) {
+        addGuestFormSubmit.addEventListener('click', function (e) {
+            e.preventDefault();
+            const formData = new FormData(document.getElementById('add-guest-form'));
+            htmx.ajax('POST', '/guests/add/', {target: '#guest-list', swap: 'innerHTML', values: formData});
+        });
+    }
+});
+
+        </script>
+    </body>
 </html>

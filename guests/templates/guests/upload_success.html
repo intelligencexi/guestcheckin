@@ -1,0 +1,15 @@
+<div id="upload-container">
+    <div class="alert alert-success">
+        {{ success_message }}
+    </div>
+    <form id="upload-csv-form" method="POST" action="{% url 'upload_csv' %}" enctype="multipart/form-data"
+          hx-post="{% url 'upload_csv' %}"
+          hx-target="#upload-container"
+          hx-swap="outerHTML"
+          hx-indicator="#upload-spinner">
+        {% csrf_token %}
+        <input type="file" name="csv_file" accept=".csv" required>
+        <button type="submit">Upload CSV</button>
+    </form>
+    <div id="upload-spinner" class="hidden">Uploading...</div>
+</div>
